@@ -41,3 +41,4 @@ Example .env:
 VUE_APP_SPOTIFY_CLIENT_ID=[CLIENT ID GENERATED IN DASHBOARD]
 VUE_APP_PLAYER_URL=http://localhost:8081
 ```
+![Basic Spotify Player](https://pbs.twimg.com/media/EBAutXRWsAAxnKz?format=jpg&name=large)
