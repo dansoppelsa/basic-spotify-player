@@ -11,6 +11,8 @@ In order to run this application, first:
 6) Add the variables `VUE_APP_SPOTIFY_CLIENT_ID` and `VUE_APP_PLAYER_URL`
 7) Run the steps below
 
+**PLEASE NOTE: You must have a paid (premium) Spotify account in order to use the Web Player**
+
 ## Project setup
 ```
 npm install
