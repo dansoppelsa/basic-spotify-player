@@ -48,7 +48,7 @@
     import ProgressBar from './ProgressBar.vue'
     import SpotifyTrackPoster from './SpotifyTrackPoster.vue'
     import SpotifySearch from './SpotifySearch.vue'
-    import axios from 'axios'
+    import * as SpotifyService from '../services/spotify'
 
     export default {
         name: "SpotifyPlayer",
@@ -80,25 +80,18 @@
             playTrack(track) {
                 const deviceId = this.player._options.id
 
-                axios.put(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
-                    JSON.stringify({uris: [track]}),
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${this.token.token}`
-                        },
-                    })
+                SpotifyService.playTrack(deviceId, track, this.token.token)
+                    .catch(console.error) // eslint-disable-line no-console
             },
             createPlayer() {
                 window.console.log('creating player...')
 
-                // eslint-disable-next-line
-                this.player = new Spotify.Player({
-                    name: 'My Spotify Player',
-                    getOAuthToken: cb => { cb(this.token.token); }
-                });
+                this.player = SpotifyService.createPlayer(
+                    'My Spotify Player',
+                    this.token.token,
+                )
 
-                this.player.addListener('ready', ({device_id}) => {
+                this.player.on('ready', ({device_id}) => {
                     this.ready = true
                     this.startPlaying()
                     window.console.log('Ready with Device ID', device_id);
@@ -157,12 +150,8 @@
                 const deviceId = this.player._options.id
                 let state = this.currentState && this.currentState.shuffle ? 'false' : 'true'
 
-                axios.put(`https://api.spotify.com/v1/me/player/shuffle?device_id=${deviceId}&state=${state}`, {}, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.token.token}`
-                    }
-                });
+                SpotifyService.shuffle(deviceId, state, this.token.token)
+                    .catch(console.error) // eslint-disable-line no-console
             }
         },
         mounted() {
