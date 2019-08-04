@@ -2,31 +2,55 @@
 
 import axios from 'axios'
 
-const spotifyApiUrl = `https://api.spotify.com/v1`
+export const api = axios.create({
+  baseURL: 'https://api.spotify.com/v1',
+  headers: {
+    'Content-Type': 'application/json',
+  }
+})
 
-export const shuffle = (deviceId, state, token) => (
-    axios.put(`${spotifyApiUrl}/me/player/shuffle?device_id=${deviceId}&state=${state}`, {}, {
+export const shuffle = (device_id, state, token) => (
+    api.put('/me/player/shuffle', {}, {
+        params: {
+            device_id,
+            state,
+        },
         headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }
     })
 )
 
-export const playTrack = (deviceId, track, token) => (
-    axios.put(`${spotifyApiUrl}/me/player/play?device_id=${deviceId}`,
+export const playTrack = (device_id, track, token) => (
+    api.put('/me/player/play',
         JSON.stringify({uris: [track]}),
         {
+            params: {
+                device_id,
+            },
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
             },
         }
     )
 )
 
 
-// ---
+export const search = (q, type, token) => (
+    api.get('/search',
+        {
+            params: {
+                q,
+                type,
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+)
+
+// --- Spotify library class wrappers
 
 export const createPlayer = (name, token) => {
     return new Spotify.Player({
