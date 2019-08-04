@@ -50,7 +50,7 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    import * as SpotifyService from '@/services/spotify'
 
     export default {
         name: "SpotifySearch",
@@ -71,16 +71,15 @@
             searchSpotify() {
                 this.searching = true
 
-                axios.get(`https://api.spotify.com/v1/search?q=${this.query}&type=${this.type}`, {
-                    headers: {
-                        Authorization: `Bearer ${this.token}`
-                    }
-                })
-                .then(response => {
-                    this.searching = false
+                SpotifyService.search(this.query, this.type, this.token)
+                    .then((response) => {
+                        this.results = response.data.tracks.items
+                    })
+                    .catch(console.error) // eslint-disable-line no-console
+                    .finally(() => {
+                        this.searching = false
+                    })
 
-                    this.results = response.data.tracks.items
-                })
             }
         },
         computed: {
